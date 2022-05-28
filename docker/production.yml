@@ -1,0 +1,51 @@
+version: '3.5'
+
+networks:
+  jeo:
+    external: false
+
+services:
+
+  api-gateway:
+    image: "kong:2.5"
+    container_name: "api-gateway"
+    restart: always
+    volumes:
+      - "./kong.yml:/home/jeo/config/kong.yml"
+    environment:
+      - KONG_DATABASE=off
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+      - KONG_PROXY_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001, 0.0.0.0:8444 ssl
+      - KONG_DECLARATIVE_CONFIG=/home/jeo/config/kong.yml
+    ports:
+      - 80:8000
+      - 443:8443
+      - 8001:8001
+      - 8444:8444
+    networks:
+      - jeo
+
+  server:
+    image: "jpsalamarcara/jeo-services:master-latest"
+    container_name: "jeo-server"
+    environment:
+      - MONGO_URL=mongodb://mongo/wanda_server
+    restart: always
+    networks:
+      - jeo
+
+  mongo:
+    image: "mongo:4.0"
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    restart: always
+    command: "mongod --smallfiles --logpath=/dev/null"
+    networks:
+      - jeo

@@ -1,0 +1,19 @@
+_format_version: "2.1"
+
+services:
+  - name: jeo-services
+    url: http://server
+    tags:
+      - wanda
+    routes:
+      - name: service-private-route
+        paths:
+          - /
+    plugins:
+      - name: key-auth
+
+consumers:
+  - username: default-user
+    custom_id: "1"
+    keyauth_credentials:
+      - key: a754766ed1b1
