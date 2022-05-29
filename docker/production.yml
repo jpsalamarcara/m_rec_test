@@ -29,10 +29,10 @@ services:
       - jeo
 
   server:
-    image: "jpsalamarcara/jeo-services:master-latest"
+    image: "jpsalamarcara/joe_services:latest"
     container_name: "jeo-server"
     environment:
-      - MONGO_URL=mongodb://mongo/wanda_server
+      - MONGO_URL=mongodb://mongo/jeo_server
     restart: always
     networks:
       - jeo

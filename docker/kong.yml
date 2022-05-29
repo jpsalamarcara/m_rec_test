@@ -9,8 +9,16 @@ services:
       - name: service-private-route
         paths:
           - /
-    plugins:
-      - name: key-auth
+#    plugins:
+#      - name: key-auth
+
+plugins:
+  - name: session
+    route: service-private-route
+    config:
+      secret: alagrandelepusecuca
+      storage: cookie
+      cookie_secure: false
 
 consumers:
   - username: default-user

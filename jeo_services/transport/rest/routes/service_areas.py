@@ -56,7 +56,7 @@ def delete_service_area(
 
 
 @router.get('/search', status_code=200)
-def delete_service_area(
+def search_service_area(
         lat: float,
         long: float,
         limit: int = 100,
