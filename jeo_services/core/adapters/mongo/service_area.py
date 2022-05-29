@@ -30,12 +30,19 @@ class MongoServiceAreaAdapter(ServiceAreaPort):
         to_store.save()
         return to_store.row_id
 
-    def get(self, row_id: str, name: str, price: str, limit: int, offset: int) -> List[ServiceArea]:
+    def get(self, row_id: str = None,
+            name: str = None,
+            price: str = None,
+            limit: int = 100,
+            offset: int = 0) -> List[ServiceArea]:
         pass
 
-    def get_by_lat_long(self, lat: float, long: float, limit: int, offset: int) -> List[ServiceArea]:
+    def get_by_lat_long(self, lat: float,
+                        long: float,
+                        limit: int = 100,
+                        offset: int = 0) -> List[ServiceArea]:
         hashes = set(map(lambda x: h3.geo_to_h3(lat, long, x), range(0, 16)))
-        pass
+        return []
 
     def update(self, row: ServiceArea):
         pass

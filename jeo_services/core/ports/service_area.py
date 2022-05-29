@@ -22,8 +22,8 @@ class ServiceAreaPort(abc.ABC):
     @abc.abstractmethod
     def get_by_lat_long(self, lat: float,
                         long: float,
-                        limit: int,
-                        offset: int) -> List[ServiceArea]:
+                        limit: int = 100,
+                        offset: int = 0) -> List[ServiceArea]:
         pass
 
     @abc.abstractmethod
