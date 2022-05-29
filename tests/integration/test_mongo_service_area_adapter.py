@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 
 from jeo_services.core.adapters.mongo.models.service_area import ServiceAreaCollection
@@ -21,6 +23,7 @@ def instance(clean_service_area_db):
 def service_row():
     row = ServiceArea(name='Somewhere',
                       price=1000.52,
+                      provider_id=f'{uuid.uuid4()}',
                       polygon={
                           "type": "Polygon",
                           "coordinates": [[

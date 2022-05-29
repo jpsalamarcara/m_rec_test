@@ -33,6 +33,7 @@ class MongoServiceAreaAdapter(ServiceAreaPort):
     def get(self, row_id: str = None,
             name: str = None,
             price: float = None,
+            provider_id: str = None,
             limit: int = 100,
             offset: int = 0) -> List[ServiceArea]:
         query = dict()
@@ -42,6 +43,8 @@ class MongoServiceAreaAdapter(ServiceAreaPort):
             query['name'] = name
         if price is not None:
             query['price'] = price
+        if provider_id:
+            query['provider_id'] = uuid.UUID(hex=provider_id)
         cursor = self.storage.objects(**query)
         raw = (x.to_mongo() for x in cursor[offset * limit: (offset + 1) * limit])
         output = []
@@ -50,12 +53,13 @@ class MongoServiceAreaAdapter(ServiceAreaPort):
             output.append(ServiceArea(**row))
         return output
 
-    def get_by_lat_long(self, lat: float,
+    def get_by_lat_long(self,  lat: float,
                         long: float,
+                        provider_id: str = None,
                         limit: int = 100,
                         offset: int = 0) -> List[ServiceArea]:
         hashes = list(set(map(lambda x: h3.geo_to_h3(lat, long, x), range(0, 11))))
-        cursor = self.storage.objects(h_three_geo_hash__in=hashes, polygon={
+        query = dict(h_three_geo_hash__in=hashes, polygon={
             "$geoIntersects": {
                 "$geometry": {
                     "type": "Point",
@@ -63,6 +67,9 @@ class MongoServiceAreaAdapter(ServiceAreaPort):
                 }
             }
         })
+        if provider_id:
+            query['provider_id'] = uuid.UUID(hex=provider_id)
+        cursor = self.storage.objects(**query)
         raw = (x.to_mongo() for x in cursor[offset * limit: (offset + 1) * limit])
         output = []
         for row in raw:

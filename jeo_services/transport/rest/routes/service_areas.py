@@ -18,10 +18,11 @@ def get_service_area_adapter():
 def get_areas(row_id: str = None,
               name: str = None,
               price: float = None,
+              provider_id: str = None,
               limit: int = 100,
               offset: int = 0,
               adapter: ServiceAreaPort = Depends(get_service_area_adapter)):
-    output = adapter.get(row_id, name, price, limit, offset)
+    output = adapter.get(row_id=row_id, name=name, provider_id=provider_id, price=price, limit=limit, offset=offset)
     return output
 
 

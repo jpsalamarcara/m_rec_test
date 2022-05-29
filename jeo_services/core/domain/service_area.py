@@ -9,6 +9,7 @@ class ServiceArea(BaseModel):
     name: str
     price: float
     polygon: dict
+    provider_id: uuid.UUID
     created_at: datetime.datetime = None
 
     @validator('polygon')

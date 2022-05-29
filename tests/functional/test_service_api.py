@@ -15,6 +15,7 @@ def clean_db():
 def post_new_service_area(api_client, clean_db):
     row = dict(name='Somewhere',
                price=1000.52,
+               provider_id=f'{uuid.uuid4()}',
                polygon={
                    "type": "Polygon",
                    "coordinates": [[
@@ -23,7 +24,7 @@ def post_new_service_area(api_client, clean_db):
                        [17.17490690610013, 78.739013671875],
                        [17.613919673106714, 78.73489379882812],
                        [17.60083012593064, 78.18557739257812]
-                   ]]
+                   ]],
                })
     response = api_client.post('/v1/service_areas/', json=row)
     return response
