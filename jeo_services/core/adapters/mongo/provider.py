@@ -58,3 +58,6 @@ class MongoProviderAdapter(ProviderPort):
         row = self.storage.objects(row_id=row_id).first()
         if row:
             row.delete()
+
+    def exists(self, row_id: uuid.UUID) -> bool:
+        return self.storage.objects(row_id=row_id).limit(1).count() > 0

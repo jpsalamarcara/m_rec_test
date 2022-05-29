@@ -30,3 +30,7 @@ class ProviderPort(abc.ABC):
     @abc.abstractmethod
     def delete(self, row_id: uuid.UUID):
         pass
+
+    @abc.abstractmethod
+    def exists(self, row_id: uuid.UUID) -> bool:
+        pass

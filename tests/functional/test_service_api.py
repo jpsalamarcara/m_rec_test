@@ -2,6 +2,7 @@ import uuid
 
 import pytest
 
+from jeo_services.core.adapters.mongo.models.provider import ProviderCollection
 from jeo_services.core.adapters.mongo.models.service_area import ServiceAreaCollection
 
 
@@ -9,13 +10,24 @@ from jeo_services.core.adapters.mongo.models.service_area import ServiceAreaColl
 def clean_db():
     for row in ServiceAreaCollection.objects:
         row.delete()
+    for row in ProviderCollection.objects:
+        row.delete()
 
 
 @pytest.fixture(scope='module')
-def post_new_service_area(api_client, clean_db):
+def post_new_provider(api_client, clean_db):
+    row = dict(name='juan', email='jsalamanca@mimail.com', phone_number='+57 60 320 312 9973')
+    response = api_client.post('/v1/providers/', json=row)
+    return response
+
+
+@pytest.fixture(scope='module')
+def post_new_service_area(api_client, clean_db, post_new_provider):
+    assert post_new_provider.status_code == 201
+    provider_id = post_new_provider.json()
     row = dict(name='Somewhere',
                price=1000.52,
-               provider_id=f'{uuid.uuid4()}',
+               provider_id=provider_id,
                polygon={
                    "type": "Polygon",
                    "coordinates": [[

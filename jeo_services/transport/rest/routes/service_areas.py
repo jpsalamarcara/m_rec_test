@@ -3,6 +3,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 
+from jeo_services.core.biz.service_area import ServiceAreaService
 from jeo_services.core.domain.service_area import ServiceArea
 from jeo_services.core.ports.service_area import ServiceAreaPort
 from jeo_services.dependency_injection import factory
@@ -12,6 +13,10 @@ router = APIRouter()
 
 def get_service_area_adapter():
     return factory.get(ServiceAreaPort)
+
+
+def get_service_area_service():
+    return factory.get(ServiceAreaService)
 
 
 @router.get('/', response_model=List[ServiceArea], status_code=200)
@@ -27,8 +32,8 @@ def get_areas(row_id: str = None,
 
 
 @router.post('/', response_model=uuid.UUID, status_code=201)
-def add_service_area(row: ServiceArea, adapter: ServiceAreaPort = Depends(get_service_area_adapter)):
-    output = adapter.add(row)
+def add_service_area(row: ServiceArea, adapter: ServiceAreaService = Depends(get_service_area_service)):
+    output = adapter.add_service_area(row)
     return output
 
 
@@ -36,9 +41,9 @@ def add_service_area(row: ServiceArea, adapter: ServiceAreaPort = Depends(get_se
 def update_service_area(
         row_id: uuid.UUID,
         row: ServiceArea,
-        adapter: ServiceAreaPort = Depends(get_service_area_adapter)):
+        adapter: ServiceAreaService = Depends(get_service_area_service)):
     row.row_id = row_id
-    adapter.update(row)
+    adapter.update_service_area(row)
     return 'OK'
 
 
