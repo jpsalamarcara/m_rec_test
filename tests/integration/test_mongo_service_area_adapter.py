@@ -36,3 +36,12 @@ def service_row():
 
 def test_add(instance: MongoServiceAreaAdapter, service_row):
     instance.add(service_row)
+
+
+def test_get(instance: MongoServiceAreaAdapter):
+    lat, long = 17.3734, 78.4738
+    output = instance.get_by_lat_long(lat, long, limit=10, offset=0)
+    assert len(output) == 1
+    lat, long = 4.640252, -74.115580
+    output = instance.get_by_lat_long(lat, long, limit=10, offset=0)
+    assert len(output) == 0

@@ -11,7 +11,7 @@ from jeo_services.core.ports.service_area import ServiceAreaPort
 
 def compute_polygon_hash(coordinates: list):
     for resolution in range(10, -1, -1):
-        hashes = set(map(lambda x: h3.geo_to_h3(x[0], x[1], resolution), coordinates[0]))
+        hashes = set(map(lambda x: h3.geo_to_h3(x[0], x[1], resolution), coordinates))
         if len(hashes) == 1:
             return list(hashes)[0]
     return None
@@ -25,7 +25,7 @@ class MongoServiceAreaAdapter(ServiceAreaPort):
 
     def add(self, row: ServiceArea) -> uuid.UUID:
         data = row.dict(exclude={'row_id', 'created_at'})
-        data['h_three_geo_hash'] = compute_polygon_hash(data.get('polygon').get('coordinates'))
+        data['h_three_geo_hash'] = compute_polygon_hash(data.get('polygon').get('coordinates')[0])
         to_store = self.storage(**data)
         to_store.save()
         return to_store.row_id
@@ -41,11 +41,28 @@ class MongoServiceAreaAdapter(ServiceAreaPort):
                         long: float,
                         limit: int = 100,
                         offset: int = 0) -> List[ServiceArea]:
-        hashes = set(map(lambda x: h3.geo_to_h3(lat, long, x), range(0, 16)))
-        return []
+        hashes = list(set(map(lambda x: h3.geo_to_h3(lat, long, x), range(0, 11))))
+        cursor = self.storage.objects(h_three_geo_hash__in=hashes, polygon={
+            "$geoIntersects": {
+                "$geometry": {
+                    "type": "Point",
+                    "coordinates": [lat, long]
+                }
+            }
+        })
+        raw = (x.to_mongo() for x in cursor[offset * limit: (offset + 1) * limit])
+        output = []
+        for row in raw:
+            row['row_id'] = row.get('_id')
+            output.append(ServiceArea(**row))
+        return output
 
     def update(self, row: ServiceArea):
-        pass
+        data = row.dict()
+        row_id = data.pop('row_id')
+        self.storage.objects(row_id=row_id).update(**data)
 
-    def delete(self, row_id: str):
-        pass
+    def delete(self, row_id: uuid.UUID):
+        row = self.storage.objects(row_id=row_id).first()
+        if row:
+            row.delete()
