@@ -14,7 +14,7 @@ class ServiceAreaPort(abc.ABC):
     @abc.abstractmethod
     def get(self, row_id: str = None,
             name: str = None,
-            price: str = None,
+            price: float = None,
             limit: int = 100,
             offset: int = 0) -> List[ServiceArea]:
         pass
@@ -31,5 +31,5 @@ class ServiceAreaPort(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def delete(self, row_id: str):
+    def delete(self, row_id: uuid.UUID):
         pass
