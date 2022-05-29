@@ -58,6 +58,18 @@ def test_get_service_area(api_client, post_new_service_area):
         assert type(service) == dict
 
 
+def test_search(api_client, post_new_service_area):
+    assert post_new_service_area.status_code == 201
+    response = api_client.get('/v1/service_areas/search', params={'lat': 17.3734, 'long': 78.4738})
+    assert response.status_code == 200
+    expected_keys = ('row_id', 'name', 'price', 'polygon', 'provider')
+    content = response.json()
+    for service in content:
+        assert type(service) == dict
+        for expected_key in expected_keys:
+            assert expected_key in service.keys()
+
+
 def test_put_service_area(api_client, post_new_service_area):
     assert post_new_service_area.status_code == 201
     response = api_client.get('/v1/service_areas/')

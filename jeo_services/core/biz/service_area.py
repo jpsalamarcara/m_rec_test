@@ -1,4 +1,5 @@
 import uuid
+from typing import List
 
 from injector import inject
 
@@ -22,3 +23,14 @@ class ServiceAreaService(object):
     def update_service_area(self, row: ServiceArea):
         assert self.provider_port.exists(row.provider_id), 'provider not found!'
         self.service_area_port.update(row)
+
+    def search(self, lat: float, long: float, limit: int, offset: int) -> List[dict]:
+        areas = self.service_area_port.get_by_lat_long(lat=lat, long=long, limit=limit, offset=offset)
+        output = []
+        for area in areas:
+            data = area.dict(exclude={'provider_id'})
+            providers = self.provider_port.get(row_id=area.provider_id.__str__())
+            if len(providers) > 0:
+                data['provider'] = providers[0].dict()
+            output.append(data)
+        return output

@@ -53,3 +53,14 @@ def delete_service_area(
         adapter: ServiceAreaPort = Depends(get_service_area_adapter)):
     adapter.delete(row_id)
     return 'OK'
+
+
+@router.get('/search', status_code=200)
+def delete_service_area(
+        lat: float,
+        long: float,
+        limit: int = 100,
+        offset: int = 0,
+        adapter: ServiceAreaService = Depends(get_service_area_service)):
+    output = adapter.search(lat=lat, long=long, limit=limit, offset=offset)
+    return output
