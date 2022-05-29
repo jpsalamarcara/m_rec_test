@@ -1,1 +1,1 @@
-# m_rec_test
+# Why use Django when you can use FastAPI?
