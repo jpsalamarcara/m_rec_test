@@ -11,3 +11,10 @@ In the `transport folder` you will find all the REST API details implemented usi
 docker-compose -f docker/testing.yml up
 pytest tests/
 ```
+
+
+## For demo in local with docker
+```shell
+docker-compose -f docker/production.yml up
+http://localhost/docs
+```
