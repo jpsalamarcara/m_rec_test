@@ -39,7 +39,7 @@ def update_provider(
 
 
 @router.delete('/{row_id}', status_code=204)
-def update_provider(
+def delete_provider(
         row_id: uuid.UUID,
         adapter: ProviderPort = Depends(get_provider_adapter)):
     adapter.delete(row_id)

@@ -30,7 +30,7 @@ class MongoProviderAdapter(ProviderPort):
             offset: int = 0) -> List[Provider]:
         query = dict()
         if row_id:
-            query['id'] = row_id
+            query['row_id'] = uuid.UUID(hex=row_id)
         if name:
             query['name'] = name
         if email:

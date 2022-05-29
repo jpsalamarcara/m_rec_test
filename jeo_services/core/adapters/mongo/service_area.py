@@ -32,10 +32,23 @@ class MongoServiceAreaAdapter(ServiceAreaPort):
 
     def get(self, row_id: str = None,
             name: str = None,
-            price: str = None,
+            price: float = None,
             limit: int = 100,
             offset: int = 0) -> List[ServiceArea]:
-        pass
+        query = dict()
+        if row_id:
+            query['row_id'] = uuid.UUID(hex=row_id)
+        if name:
+            query['name'] = name
+        if price is not None:
+            query['price'] = price
+        cursor = self.storage.objects(**query)
+        raw = (x.to_mongo() for x in cursor[offset * limit: (offset + 1) * limit])
+        output = []
+        for row in raw:
+            row['row_id'] = row.get('_id')
+            output.append(ServiceArea(**row))
+        return output
 
     def get_by_lat_long(self, lat: float,
                         long: float,
