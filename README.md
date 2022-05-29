@@ -15,6 +15,7 @@ pytest tests/
 
 ## For demo in local with docker
 ```shell
+sh build.sh
 docker-compose -f docker/production.yml up
-http://localhost/docs
+# go to http://localhost/docs
 ```
