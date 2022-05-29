@@ -28,5 +28,5 @@ class ProviderPort(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def delete(self, row_id: str):
+    def delete(self, row_id: uuid.UUID):
         pass

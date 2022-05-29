@@ -7,13 +7,13 @@ from jeo_services.dependency_injection import factory
 
 
 @pytest.fixture(scope='module')
-def clean_db():
+def clean_service_area_db():
     for row in ServiceAreaCollection.objects:
         row.delete()
 
 
 @pytest.fixture(scope='module')
-def instance(clean_db):
+def instance(clean_service_area_db):
     return factory.get(MongoServiceAreaAdapter)
 
 
