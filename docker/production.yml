@@ -29,7 +29,7 @@ services:
       - jeo
 
   server:
-    image: "jpsalamarcara/joe_services:latest"
+    image: "jpsalamarcara/jeo_services:latest"
     container_name: "jeo-server"
     environment:
       - MONGO_URL=mongodb://mongo/jeo_server
