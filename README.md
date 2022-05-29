@@ -5,3 +5,9 @@ In the `ports folder` are all the abstract definitions and in the `adapters fold
 The dependency injection is responsible for choosing the right adapter at runtime.
 
 In the `transport folder` you will find all the REST API details implemented using FastAPI
+
+## For running tests
+```shell
+docker-compose -f docker/testing.yml up
+pytest tests/
+```
